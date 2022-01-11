@@ -9,6 +9,7 @@ Created on Tue Jan 11 16:57 2022
 
 import torch
 from torch import nn
+from net.blocks import ResidualBlock
 
 
 class CRN3D(nn.Module):

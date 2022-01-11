@@ -9,32 +9,52 @@ Created on Tue Jan 11 16:57 2022
 
 import torch
 from torch import nn
+from net.blocks import ResidualBlock
 
 
 class CRN3D(nn.Module):
     def __init__(self, bands, num_classes):
-        # image_patch: 10x13x13
+        # Patch size: [1, 10, 23, 23]
         super().__init__()
-        self.feature = nn.Sequential(
-            nn.Conv3d(1, 20, (3, 3, 3)),
-            nn.ReLU(inplace=True),
-            nn.MaxPool3d((1, 2, 2)),
+
+        self.relu = nn.ReLU()
+        self.block1 = nn.Sequential(
+            nn.Conv3d(1, 16, (3, 3, 3)),  # Output size: [16, 8, 21, 21]
+            nn.BatchNorm3d(16), self.relu,
+            ResidualBlock(16), self.relu,
+            nn.MaxPool3d((1, 2, 2)),  # Output size: [16, 8, 10, 10]
+            nn.Dropout3d(0.05)
+        )
+        self.block2 = nn.Sequential(
+            nn.Conv3d(16, 32, (3, 3, 3)),  # Output size: [32, 6, 8, 8]
+            nn.BatchNorm3d(32), self.relu,
+            ResidualBlock(32), self.relu,
+            nn.MaxPool3d((1, 2, 2)),  # Output size: [32, 6, 4, 4]
             nn.Dropout3d(0.05),
-            nn.Conv3d(20, 40, (3, 3, 3)),
-            nn.ReLU(inplace=True),
-            nn.MaxPool3d((1, 2, 2))
+            nn.Conv3d(32, 64, (3, 3, 3)),  # Output size: [64, 4, 2, 2]
+            nn.BatchNorm3d(64), self.relu,
+            nn.MaxPool3d((1, 2, 2)),  # Output size: [64, 4, 1, 1]
         )
         self.classifier = nn.Sequential(
-            nn.Dropout(0.05),
-            nn.Linear((bands - 4) * 40, 80),
-            nn.ReLU(inplace=True),
-            nn.Linear(80, num_classes)
+            nn.Linear(256, 128), self.relu,
+            nn.Linear(128, num_classes)
         )
 
     def forward(self, x):
         # Input size: [batch_size, 1, depth, h, w]
-        out = self.feature(x)
-        batch_size = out.shape[0]
-        out = out.view((batch_size, -1))
+        out = self.block1(x)
+        out = self.block2(out)
+
+        out = out.view((-1, 256))
         out = self.classifier(out)
         return out
+
+# self.feature = nn.Sequential(  # [1, 10, 13, 13]
+        #     nn.Conv3d(1, 20, (3, 3, 3)),  # [20, 8, 11, 11]
+        #     nn.ReLU(inplace=True),
+        #     nn.MaxPool3d((1, 2, 2)),  # [20, 8, 5, 5]
+        #     nn.Dropout3d(0.05),
+        #     nn.Conv3d(20, 40, (3, 3, 3)),  # [40, 6, 3, 3]
+        #     nn.ReLU(inplace=True),
+        #     nn.MaxPool3d((1, 2, 2))  # [40, 6, 1, 1]
+        # )
