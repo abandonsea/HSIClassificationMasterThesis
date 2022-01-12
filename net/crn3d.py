@@ -13,7 +13,7 @@ from net.blocks import ResidualBlock
 
 
 class CRN3D(nn.Module):
-    def __init__(self, num_classes):
+    def __init__(self, num_bands, num_classes):
         # Patch size: [1, 10, 23, 23]
         super().__init__()
 
@@ -35,8 +35,9 @@ class CRN3D(nn.Module):
             nn.BatchNorm3d(64), self.relu,
             nn.MaxPool3d((1, 2, 2)),  # Output size: [64, 4, 1, 1]
         )
+        fc_size = 64 * (num_bands - 6)
         self.classifier = nn.Sequential(
-            nn.Linear(256, 128), self.relu,
+            nn.Linear(fc_size, 128), self.relu,
             nn.Linear(128, num_classes)
         )
 
