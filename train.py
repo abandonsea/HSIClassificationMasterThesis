@@ -13,8 +13,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-import net.crn3d_paviau as pavia_u
-import net.crn3d_salinas as salinas
+from net.crn3d import CRN3D
 from test import test_model
 from utils.config import CRN3DConfig
 from utils.tools import *
@@ -85,12 +84,8 @@ def train():
         val_loader = DataLoader(val_dataset, batch_size=cfg.test_batch_size, shuffle=False)
 
         # Setup model, optimizer, loss and scheduler
-        if cfg.dataset == 'PaviaU':
-            assert cfg.sample_bands == 10, "Samples from PaviaU must have 10 bands!"
-            model = nn.DataParallel(pavia_u.CRN3D(data.num_classes))
-        else:
-            assert cfg.sample_bands == 20, "Samples from Salinas and Indian Pines must have 20 bands!"
-            model = nn.DataParallel(salinas.CRN3D(data.num_classes))
+        assert cfg.sample_size == 23, "Samples must have size 23! Change architecture for another window size"
+        model = nn.DataParallel(CRN3D(cfg.sample_bands, data.num_classes))
 
         criterion = nn.CrossEntropyLoss()
         optimizer = torch.optim.SGD(model.parameters(), lr=cfg.learning_rate, momentum=cfg.momentum,

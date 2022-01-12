@@ -14,11 +14,11 @@ import numpy as np
 from sklearn import metrics
 from tqdm import tqdm
 
+from net.crn3d import CRN3D
 from utils.config import CRN3DConfig
 from utils.dataset import CRN3DDataset
 from utils.tools import *
-import net.crn3d_paviau as pavia_u
-import net.crn3d_salinas as salinas
+
 
 # Import tensorboard
 from torch.utils.tensorboard import SummaryWriter
@@ -61,11 +61,7 @@ def test():
         num_classes = len(np.unique(test_gt)) - 1  # Remove one for the "undefined" class
 
         # Load model
-        if cfg.dataset == 'PaviaU':
-            model = nn.DataParallel(pavia_u.CRN3D(num_classes))
-        else:
-            model = nn.DataParallel(salinas.CRN3D(num_classes))
-
+        model = nn.DataParallel(CRN3D(cfg.sample_bands, num_classes))
         model_file = f'{cfg.exec_folder}runs/crn3d_{test_best}model_run_{run}.pth'
         model.load_state_dict(torch.load(model_file, map_location=device))
         model.eval()
