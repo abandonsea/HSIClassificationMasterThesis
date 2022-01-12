@@ -86,8 +86,10 @@ def train():
 
         # Setup model, optimizer, loss and scheduler
         if cfg.dataset == 'PaviaU':
+            assert cfg.sample_bands == 10, "Samples from PaviaU must have 10 bands!"
             model = nn.DataParallel(pavia_u.CRN3D(data.num_classes))
         else:
+            assert cfg.sample_bands == 20, "Samples from Salinas and Indian Pines must have 20 bands!"
             model = nn.DataParallel(salinas.CRN3D(data.num_classes))
 
         criterion = nn.CrossEntropyLoss()
