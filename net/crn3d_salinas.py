@@ -45,6 +45,6 @@ class CRN3D(nn.Module):
         out = self.block1(x)
         out = self.block2(out)
 
-        out = out.view((-1, 256))
+        out = out.view((-1, 512))
         out = self.classifier(out)
         return out
