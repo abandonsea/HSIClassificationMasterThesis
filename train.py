@@ -86,9 +86,9 @@ def train():
 
         # Setup model, optimizer, loss and scheduler
         if cfg.dataset == 'PaviaU':
-            model = nn.DataParallel(pavia_u.CRN3D(cfg.sample_bands, data.num_classes))
+            model = nn.DataParallel(pavia_u.CRN3D(data.num_classes))
         else:
-            model = nn.DataParallel(salinas.CRN3D(cfg.sample_bands, data.num_classes))
+            model = nn.DataParallel(salinas.CRN3D(data.num_classes))
 
         criterion = nn.CrossEntropyLoss()
         optimizer = torch.optim.SGD(model.parameters(), lr=cfg.learning_rate, momentum=cfg.momentum,

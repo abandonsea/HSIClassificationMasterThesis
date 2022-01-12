@@ -78,9 +78,9 @@ def test(config_file):
             # Load model
             model_file = f'{cfg.exec_folder}runs/crn3d_{test_best}model_run_{run}.pth'
             if cfg.dataset == 'PaviaU':
-                model = nn.DataParallel(pavia_u.CRN3D(cfg.sample_bands, num_classes))
+                model = nn.DataParallel(pavia_u.CRN3D(num_classes))
             else:
-                model = nn.DataParallel(salinas.CRN3D(cfg.sample_bands, num_classes))
+                model = nn.DataParallel(salinas.CRN3D(num_classes))
 
             model.load_state_dict(torch.load(model_file, map_location=device))
             model.eval()
