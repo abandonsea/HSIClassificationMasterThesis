@@ -25,18 +25,20 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # SET TEST CONFIG FILE #
 ########################
 PATH = 'experiments/'
-EXPERIMENTS = ['server_01', 'server_salinas_01', 'server_indian_pines_01',
-               'reduced_01_server_paviau_01', 'reduced_01_server_salinas_01', 'reduced_01_server_indian_pines_01',
-               'reduced_05_server_paviau_02', 'reduced_05_server_salinas_01', 'reduced_05_server_indian_pines_01',
-               'reduced_10_server_paviau_01', 'reduced_10_server_salinas_01', 'reduced_10_server_indian_pines_01']
+EXPERIMENTS = ['server_paviau_01', 'server_salinas_02', 'server_indian_pines_02',
+               'reduced_01_server_paviau_01', 'reduced_01_server_salinas_01', 'reduced_01_server_indian_pines_03',
+               'reduced_05_server_paviau_01', 'reduced_05_server_salinas_01', 'reduced_05_server_indian_pines_01',
+               'reduced_10_server_paviau_01', 'reduced_10_server_salinas_02', 'reduced_10_server_indian_pines_01']
 
 
 NOISES = [['salt_and_pepper', 0], ['salt_and_pepper', 0.001], ['salt_and_pepper', 0.005], ['salt_and_pepper', 0.01],
           ['salt_and_pepper', 0.05],
           ['additive_gaussian', 0.05], ['additive_gaussian', 0.1], ['additive_gaussian', 0.3],
-          ['additive_gaussian', 0.5], ['additive_gaussian', 1.0],
+          ['additive_gaussian', 0.5], ['additive_gaussian', 1.0], ['additive_gaussian', 1.3],
+          ['additive_gaussian', 1.5], ['additive_gaussian', 2.0],
           ['multiplicative_gaussian', 0.1], ['multiplicative_gaussian', 0.3], ['multiplicative_gaussian', 0.5],
-          ['multiplicative_gaussian', 1.0],
+          ['multiplicative_gaussian', 1.0], ['multiplicative_gaussian', 1.3], ['multiplicative_gaussian', 1.5],
+          ['multiplicative_gaussian', 2.0],
           ['section_mul_gaussian', 1], ['section_mul_gaussian', 2], ['section_mul_gaussian', 3],
           ['section_mul_gaussian', 4], ['section_mul_gaussian', 5], ['section_mul_gaussian', 6],
           ['section_mul_gaussian', 7], ['section_mul_gaussian', 8],
